@@ -16,15 +16,15 @@ const INITIAL_STATE = {
 class WalletForm extends Component {
   state = INITIAL_STATE;
 
-  componentDidMount() {
-    
-   
+  async componentDidMount() {
+    const { fetchCurrency } = this.props;
+    const { dispatch } = this.props;
+    await fetchCurrency();
   }
 
   handleOptionsChange = (event) => {
     const { name, value } = event.target;
     this.setState({ [name]: value });
-    fetchCurrencies();
   };
 
   render() {
@@ -77,8 +77,12 @@ class WalletForm extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  currencies: state.wallet.currencies,
+const mapStateToProps = (
+  { wallet: { currencies } },
+) => ({ currencies });
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchCurrency: () => dispatch(fetchCurrencies()),
 });
 
-export default connect(mapStateToProps)(WalletForm);
+export default connect(mapStateToProps, mapDispatchToProps)(WalletForm);

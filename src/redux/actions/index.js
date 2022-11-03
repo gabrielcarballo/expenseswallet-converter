@@ -6,11 +6,11 @@ export const handleLogin = (payload) => ({ type: LOGIN, payload });
 export const getCurrencies = (payload) => ({ type: GET_CURRENCIES, payload });
 
 export function fetchCurrencies() {
-  return async (dispatch) => {
+  return async () => {
     const response = await fetch(endPoint);
     const data = await response.json();
     const finalData = Object.keys(data).filter((currency) => currency !== 'USDT');
     console.log(finalData);
-    dispatch(getCurrencies(finalData));
+    return getCurrencies(finalData);
   };
 }
