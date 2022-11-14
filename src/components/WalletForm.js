@@ -16,10 +16,9 @@ const INITIAL_STATE = {
 class WalletForm extends Component {
   state = INITIAL_STATE;
 
-  async componentDidMount() {
+  componentDidMount() {
     const { fetchCurrency } = this.props;
-    const { dispatch } = this.props;
-    await fetchCurrency();
+    fetchCurrency();
   }
 
   handleOptionsChange = (event) => {
@@ -29,7 +28,8 @@ class WalletForm extends Component {
 
   render() {
     const { currencies } = this.props;
-    const { value, description, currency, method, tag, id, exchangeRates } = this.state;
+    const { value, description, /*  currency, method, tag, id, exchangeRates */
+    } = this.state;
     return (
       <section>
         <form>
@@ -60,9 +60,9 @@ class WalletForm extends Component {
               id="currency"
               onChange={ this.handleOptionsChange }
             >
-              { currencies && currencies.map((e) => (
+              { currencies && currencies.map((e, i) => (
                 <option
-                  key={ e }
+                  key={ i }
                   value={ e }
                 >
                   { e }
@@ -76,6 +76,13 @@ class WalletForm extends Component {
     );
   }
 }
+
+WalletForm.propTypes = {
+  currencies: PropTypes.shape({
+    map: PropTypes.func,
+  }).isRequired,
+  fetchCurrency: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = (
   { wallet: { currencies } },
