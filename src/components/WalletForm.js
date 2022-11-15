@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchCurrencies } from '../redux/actions';
+import { fetchCurrencies, saveFormOnRedux } from '../redux/actions';
 
 const INITIAL_STATE = {
   value: '',
@@ -21,6 +21,15 @@ class WalletForm extends Component {
     fetchCurrency();
   }
 
+  handleSubmit = () => {
+    const { saveAllForm } = this.props;
+    saveAllForm(this.state);
+    this.setState((prevState) => ({
+      ...INITIAL_STATE,
+      id: prevState.id + 1,
+    }));
+  };
+
   handleOptionsChange = (event) => {
     const { name, value } = event.target;
     this.setState({ [name]: value });
@@ -28,8 +37,7 @@ class WalletForm extends Component {
 
   render() {
     const { currencies } = this.props;
-    const { value, description, currency, method, tag, exchangeRates
-    } = this.state;
+    const { value, description, currency, method, tag } = this.state;
     return (
       <section>
         <form>
@@ -58,6 +66,7 @@ class WalletForm extends Component {
               data-testid="currency-input"
               name="currency"
               id="currency"
+              value={ currency }
               onChange={ this.handleOptionsChange }
             >
               Moeda
@@ -78,6 +87,7 @@ class WalletForm extends Component {
               data-testid="method-input"
               name="method"
               id="method"
+              value={ method }
               onChange={ this.handleOptionsChange }
             >
               Médoto de pagamento
@@ -91,6 +101,7 @@ class WalletForm extends Component {
               data-testid="tag-input"
               name="tag"
               onChange={ this.handleOptionsChange }
+              value={ tag }
             >
               Tag
               <option value="Alimentação">Alimentação</option>
@@ -100,8 +111,14 @@ class WalletForm extends Component {
               <option value="Saúde">Saúde</option>
             </select>
           </label>
-
         </form>
+        <button
+          type="button"
+          onClick={ this.handleSubmit }
+        >
+          Adicionar despesa
+        </button>
+
       </section>
     );
   }
@@ -112,6 +129,7 @@ WalletForm.propTypes = {
     map: PropTypes.func,
   }).isRequired,
   fetchCurrency: PropTypes.func.isRequired,
+  saveAllForm: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (
@@ -120,6 +138,7 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (dispatch) => ({
   fetchCurrency: () => dispatch(fetchCurrencies()),
+  saveAllForm: (payload) => dispatch(saveFormOnRedux(payload)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletForm);
