@@ -5,17 +5,7 @@ import { connect } from 'react-redux';
 const mapStateToProps = (state) => (
   { email: state.user.email, expenses: state.wallet.expenses });
 
-const timer = 1000;
-
 class Header extends Component {
-  state = {
-    totalExpenses: 0,
-  };
-
-  componentDidMount() {
-    this.handleExpenses();
-  }
-
   handleExpenses = () => {
     const { expenses } = this.props;
     const totalExpenses = expenses.reduce((acc, expense) => {
@@ -25,18 +15,11 @@ class Header extends Component {
       acc += expanseConverted;
       return acc;
     }, 0);
-    return this.setState({
-      totalExpenses: totalExpenses.toFixed(2),
-    }, () => {
-      setInterval(() => {
-        this.handleExpenses();
-      }, timer);
-    });
+    return totalExpenses.toFixed(2);
   };
 
   render() {
     const { email } = this.props;
-    const { totalExpenses } = this.state;
     return (
       <header>
         <nav>
@@ -48,7 +31,7 @@ class Header extends Component {
           <span
             data-testid="total-field"
           >
-            { totalExpenses }
+            { this.handleExpenses() }
           </span>
           <span
             data-testid="header-currency-field"
