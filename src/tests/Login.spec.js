@@ -1,13 +1,12 @@
 import React from 'react';
-/* import { screen, waitFor } from '@testing-library/react'; */
+import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 import { renderWithRouterAndRedux } from './helpers/renderWith';
-/* import mock from './helpers/mockData'; */
 
 describe('Login component tests', () => {
-  it('Tests if elements are rendered correctly', () => {
-    const { getByRole, getByTestId } = renderWithRouterAndRedux(<App />);
+  it('Tests if elements are rendered correctly', async () => {
+    const { getByRole, getByTestId, history } = renderWithRouterAndRedux(<App />);
     const enterBtn = getByRole('button', { name: /entrar/i });
     const emailInput = getByRole('textbox');
     const passwordInput = getByTestId('password-input');
@@ -19,5 +18,6 @@ describe('Login component tests', () => {
     userEvent.type(passwordInput, '123456789');
     expect(enterBtn).toBeEnabled();
     userEvent.click(enterBtn);
+    await waitFor(() => expect(history.location.pathname).toBe('/carteira'));
   });
 });
